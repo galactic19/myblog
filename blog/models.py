@@ -8,8 +8,17 @@ class Category(models.Model):
     description = models.CharField(max_length=100)
     meta_description = models.CharField(max_length=100)
     
+    class Meta:
+        verbose_name = '카테고리'    
+        verbose_name_plural = '카테고리'
+    
     def __str__(self):
         return self.name
+    
+    
+    def get_absolute_url(self):
+        return ''
+    
 
 
 class Post(models.Model):
@@ -24,6 +33,12 @@ class Post(models.Model):
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # 카테고리
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = '포스트'
+        verbose_name_plural = '포스트'
 
 
     def __str__(self):

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from .models import *
 
 def index(request):
-    pass
+    return render(request, 'blog/list.html')
