@@ -17,7 +17,7 @@
                             {% if post.post_image.exists %}
                                 <img class="card-img-top" src="{{ post.post_image.url }}" alt="..." />
                             {% else %}
-                                <span>이미지가 없습니다.</span>
+                                <img class="card-img-top" src="https://picsum.photos/seed/{{ post.pk }}/800/350" alt="..." />
                             {% endif %}
                         </a>
                         <div class="card-body">
