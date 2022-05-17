@@ -4,19 +4,40 @@
         <!-- Page content-->
         <div class="container">
             <div class="row">
+
                 <!-- Blog entries-->
                 <div class="col-lg-8">
+                
                     <!-- Featured blog post-->
+                    {% if post_list.exists %}
+                    
+                    {% for post in post_list %}
                     <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                        <a href="#!">
+                            {% if post.post_image.exists %}
+                                <img class="card-img-top" src="{{ post.post_image.url }}" alt="..." />
+                            {% else %}
+                                <span>이미지가 없습니다.</span>
+                            {% endif %}
+                        </a>
                         <div class="card-body">
-                            <div class="small text-muted">January 1, 2022</div>
-                            <h2 class="card-title">Featured Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read more →</a>
+                            <div class="small text-muted">{{ post.created_at }}  writer <span class="lead text-primary">{{ post.author.username }}</span></div>
+                            <h2 class="card-title">
+                                <a href="#!" class="text-decoration-none fw-bolder text-dark">
+                                    {{ post.title }}
+                                </a>
+                            </h2>
+                            {% if post.hook_title %}
+                            <h5 class="text-muted"># {{ post.hook_title }}</h5>
+                            {% endif %}
+                            <p class="card-text lh-sm">{{ post.content|truncatechars:150}}</p>
+                            {% comment %} <p>{{ post }}</p> {% endcomment %}
+                            <a class="btn btn-primary" href="#!">더보기 →</a>
                         </div>
                     </div>
-           
+                    {% endfor %}
+
+
                     <!-- Pagination-->
                     <nav aria-label="Pagination">
                         <hr class="my-0" />
@@ -30,6 +51,9 @@
                             <li class="page-item"><a class="page-link" href="#!">Older</a></li>
                         </ul>
                     </nav>
+                    {% else %}
+                        <h3 class="text-center py-5">작성된 게시물이 없습니다.</h3>
+                    {% endif %}
                 </div>
                 {% include 'side.html' %}
                 
