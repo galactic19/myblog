@@ -12,8 +12,9 @@
                     {% if post_list.exists %}
                     
                     {% for post in post_list %}
+
                     <div class="card mb-4">
-                        <a href="#!">
+                        <a href="{% url 'blog:post' post.pk %}">
                             {% if post.post_image.exists %}
                                 <img class="card-img-top" src="{{ post.post_image.url }}" alt="..." />
                             {% else %}
@@ -23,7 +24,7 @@
                         <div class="card-body">
                             <div class="small text-muted">{{ post.created_at }}  writer <span class="lead text-primary">{{ post.author.username }}</span></div>
                             <h2 class="card-title">
-                                <a href="#!" class="text-decoration-none fw-bolder text-dark">
+                                <a href="{% url 'blog:post' pk=post.pk %}" class="text-decoration-none fw-bolder text-dark">
                                     {{ post.title }}
                                 </a>
                             </h2>
@@ -32,7 +33,7 @@
                             {% endif %}
                             <p class="card-text lh-sm">{{ post.content|truncatechars:150}}</p>
                             {% comment %} <p>{{ post }}</p> {% endcomment %}
-                            <a class="btn btn-primary" href="#!">더보기 →</a>
+                            <a class="btn btn-primary" href="{% url 'blog:post' post.pk %}">더보기 →</a>
                         </div>
                     </div>
                     {% endfor %}

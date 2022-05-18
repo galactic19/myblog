@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import os
 
 
 class Category(models.Model):
@@ -43,3 +44,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title + " " + self.hook_title
+    
+    def get_file_name(self):
+        return os.path.basename(self.post_file.name)
+    
+    def get_file_ext(self):
+        return self.get_file_name().split('.')[-1]

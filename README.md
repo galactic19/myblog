@@ -121,3 +121,34 @@ class TestView(TestCase):
         self.assertNotIn(self.no_post, main_area.text)
 
 ```
+
+
+
+***
+
+## 업로드된 파일을 첨부. (다운로드 기능)
+파일을 첨부하고 파일 다운로드 가능하게 처리하는 부분이다.
+파일을 처리해 주기위해 조금의 수고스러움은 필요 했다.
+
+파이썬에서 os 모듈을 import 파일 명만 골라내고 파일의 확장자도 골라낸다.
+
+`models.py` 파일에서 처리 한다.
+Views.py 파일도 있지만 데이터와 관련되어 바로 처리할 것이 있으면 models.py 에서 처리한다.
+os 모듈을 사용해서 아래와 같이 models.py 에 함수를 만들어 처리한다.
+
+```
+    def get_file_name(self):
+        return os.path.basename(self.post_file.name)
+
+    def get_file_ext(self):
+        return self.get_file_name().split('.')[-1]
+
+```
+
+get_file_name에서 os 모듈을 사용해 경로를 제거한 파일명만 return 한다.
+get_file_ext 함수에서는 get_file_name 의 값을 가져와 확장자만 떼어낸다.
+
+get_file_name 에서 사용된 basename 는 os에서 제공하는 메서드다 .
+여기 링크를 참고하자.
+[https://devanix.tistory.com/298](https://devanix.tistory.com/298)
+
