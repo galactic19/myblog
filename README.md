@@ -145,6 +145,11 @@ os 모듈을 사용해서 아래와 같이 models.py 에 함수를 만들어 처
 
 ```
 
+template html 파일에서 이렇게 사용할 수 있다.
+```
+    <a href="psot.post_file.url">{{ post.get_file_name }}</a>
+```
+
 get_file_name에서 os 모듈을 사용해 경로를 제거한 파일명만 return 한다.
 get_file_ext 함수에서는 get_file_name 의 값을 가져와 확장자만 떼어낸다.
 
