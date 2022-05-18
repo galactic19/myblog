@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 import os
 
 
@@ -45,8 +46,17 @@ class Post(models.Model):
     def __str__(self):
         return self.title + " " + self.hook_title
     
+    
     def get_file_name(self):
         return os.path.basename(self.post_file.name)
+    
+    
+    def get_file_size(self):
+        file_path = "%s/%s" % (settings.MEDIA_ROOT, self.post_file.name)
+        num_byte = os.path.getsize(file_path)
+        result = num_byte/1024
+        return int(result)
+    
     
     def get_file_ext(self):
         return self.get_file_name().split('.')[-1]

@@ -28,13 +28,13 @@
                             <div>
                                 <span class="badge badge-default text-primary">Writer : {{ post.author}}</span> ·
                                 <span class="badge badge-default text-dark">Created : {{ post.created_at }}</span>
-                                
+
                                 {% if post.post_file %}
                                     <div class="mt-2">
                                         <p class="mb-0"><span class="badge badge-default text-muted">다운로드 가능한 첨부된 파일이 있습니다.</span></p>
                                         <p>
                                             <span class="badge badge-default text-secondary">Download : <i class="fa fa-folder-open"></i> 
-                                                <a href="{{ post.post_file.url }}" class="text-decoration-none text-muted" Download>{{ post.get_file_name}}</a> </span>
+                                                <a href="{{ post.post_file.url }}" class="text-decoration-none text-muted" Download>{{ post.get_file_name}}</a> [{{post.get_file_size}} byte]</span>
                                         </p>
                                     </div>
                                 {% endif %}
