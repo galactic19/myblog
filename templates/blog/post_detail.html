@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %} 글상세{% endblock title %}
+{% block title %} {{ post.title }}{% endblock title %}
 
 {% block content %}
-    <div class="container" id="post_area">
+    <div class="container">
 
 
         <!-- Page content-->
@@ -11,6 +11,7 @@
             <div class="row">
                 <div class="col-lg-8">
 
+                    <div id="post-area">
                     <!-- Post content-->
                     <article>
                         <!-- Preview image figure-->
@@ -44,8 +45,10 @@
                             <p class="fs-5 mb-4 lead">{{ post.content|linebreaksbr }}</p>
                         </section>
                     </article>
+                    </div>
 
 
+                    <div class="comment-area">
                     <!-- Comments section-->
                     <section class="mb-5">
                         <div class="card bg-light" id="comment-area">
@@ -88,6 +91,7 @@
                             </div>
                         </div>
                     </section>
+                    </div>
                 </div>
                 {% include 'side.html' %}
             </div>

@@ -26,7 +26,7 @@ class TestView(TestCase):
 
         # 1-2 페이지 타이틀은 '블로그 : 목록' 이다.
         soup = BeautifulSoup(post_list.content, 'html.parser')
-        self.assertEqual(soup.title.text, '블로그 : 목록')
+        self.assertEqual(soup.title.text, 'Blog List')
 
         # 1-3 네비게이션 바를 체크하여 변수에 대입.
         navbar = soup.nav
@@ -61,7 +61,7 @@ class TestView(TestCase):
         self.assertNotIn(self.no_post, main_area.text)
     
     def test_post_detail(self):
-        # 1-1 포트슽가 하나 있다.
+        # 1-1 포스트가 하나 있다.
         self.post_001 = Post.objects.create(title='첫 번째 포스트 입니다.',content='첫번째 내용 테스트 입니다.')
         
         # 1-2 포스트의 url은 /blog/1/ 이다.

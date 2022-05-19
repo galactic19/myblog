@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% block title %} : 목록{% endblock title %}
+
+{% block title %} List{% endblock title %}
 {% block content %}
         <!-- Page content-->
         <div class="container">
             <div class="row">
 
                 <!-- Blog entries-->
-                <div class="col-lg-8" id="main-area">
+                <div class="col-lg-8">
                 
                     <!-- Featured blog post-->
                     {% if post_list.exists %}
