@@ -14,7 +14,7 @@
                     
                     {% for post in post_list %}
 
-                    <div class="card mb-4">
+                    <div class="card mb-4" id="post-{{ post.pk }}">
                         <a href="{% url 'blog:post' post.pk %}">
                             {% if post.post_image %}
                                 <img class="card-img-top" src="{{ post.post_image.url }}" alt="..." />
@@ -23,7 +23,14 @@
                             {% endif %}
                         </a>
                         <div class="card-body">
-                            <div class="small text-muted">{{ post.created_at }}  writer <span class="lead text-primary">{{ post.author.username|upper }}</span></div>
+                            <div class="small text-muted my-2">
+                                <section>{{ post.created_at }}  writer <span class="lead text-primary">{{ post.author.username|upper }}</span></section>
+                                {% if post.category.name %}
+                                    <section><span class="badge bg-light text-dark">카테고리</span> <h6 class="badge bg-info">{{ post.category.name }}</h6></section>
+                                {% else %}
+                                    <section><span class="badge bg-light text-dark">카테고리</span> <h6 class="badge bg-info">미분류</h6></section>
+                                {% endif %}
+                            </div>
                             <h2 class="card-title">
                                 <a href="{% url 'blog:post' pk=post.pk %}" class="text-decoration-none fw-bolder text-dark">
                                     {{ post.title }}
@@ -34,7 +41,7 @@
                             {% endif %}
                             <p class="card-text lh-sm">{{ post.content|truncatechars:150}}</p>
                             {% comment %} <p>{{ post }}</p> {% endcomment %}
-                            <a class="btn btn-primary" href="{% url 'blog:post' post.pk %}">더보기 →</a>
+                            <a class="btn btn-light" href="{% url 'blog:post' post.pk %}">더보기 →</a>
                         </div>
                     </div>
                     {% endfor %}

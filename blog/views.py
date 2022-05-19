@@ -5,6 +5,11 @@ from .models import *
 
 class BlogView(ListView):
     model = Post
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context        
 
 
 # Class 형 View 를 만들기 위해 FBV 는 주석 처리
