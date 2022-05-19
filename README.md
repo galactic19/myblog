@@ -65,12 +65,6 @@
 함수의 이름을 바꾸고 테스트 해보니 작동되지 않는다.
 네이밍의 규칙이 test_모델명_list 인가 ....
 
-아래는 간단하게 작성해본 테스트 코드(참고용으로 올림.)
-```
-from django.test import TestCase, Client
-from bs4 import BeautifulSoup
-from .models import *
-
 ##### assertIn 함수의 설명
 ###### assertIn()은 단위 테스트에서 문자열이 다른 문자열에 포함되어 있는지 여부를 확인하는 데 사용되는 단위 테스트
 
@@ -86,6 +80,14 @@ from .models import *
 1. 함수에 의한 비교에 사용되는 모든 유형의 firstValue  변수
 2. secondValue : 함수별 비교에 사용되는 모든 유형의 변수
 3. message : 테스트 케이스가 실패했을 때 표시되는 메시지와 같은 문자열 문장.
+
+아래 참고용 코드
+
+
+```
+from django.test import TestCase, Client
+from bs4 import BeautifulSoup
+from .models import *
 
 
 class TestView(TestCase):
