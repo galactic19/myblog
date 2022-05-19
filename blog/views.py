@@ -43,5 +43,20 @@ class PostDetail(DetailView):
 #     context = {'post':post}
 #     return render(request, 'blog/detail.html', context)
 
+
+def category_page(request, slug):
+    if slug == 'None':
+        category = '미분류'
+        post_list = Post.objects.filter(category=None)
+    else:
+        category = get_object_or_404(Category, slug=slug)
+        post_list = Post.objects.filter(category=category)
+        
+    categories = Category.objects.all()
+    no_category_post_count = Post.objects.filter(category=None).count()
+    context = {'category':category, 'post_list':post_list, 'categories':categories, 'no_category_post_count':no_category_post_count}
+    return render(request, 'blog/post_list.html', context)
+
+
 def about(request):
     pass

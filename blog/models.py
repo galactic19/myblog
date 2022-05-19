@@ -16,11 +16,12 @@ class Category(models.Model):
         verbose_name_plural = '카테고리'
     
     def __str__(self):
-        return self.name + self.slug
+        return self.name
+        # return self.name + self.slug
 
     def get_absolute_url(self):
-        # 임시로 설정
-        return self.name
+        return reverse('blog:category', args=[self.slug])
+        # return f'/blog/category/{self.slug}/'
 
 
 class Post(models.Model):

@@ -17,9 +17,9 @@
                 <div class="col-sm-10">
                     <ul class="list-unstyled mb-0">
                         {% for category in categories %}
-                            <li><a href="{{category.get_absolut_url}}" class="text-decoration-none text-dark">{{ category.name }} ({{ category.post_set.count}})</a></li>
+                            <li><a href="{{category.get_absolute_url}}" class="text-decoration-none text-dark">{{ category.name }} ({{ category.post_set.count}})</a></li>
                         {% endfor %}
-                            <li><a href="{{category.get_absolut_url}}" class="text-decoration-none text-dark">미분류 ({{no_category_post_count}})</a></li>
+                            <li><a href="{% url 'blog:category' None %}" class="text-decoration-none text-dark">미분류 ({{no_category_post_count}})</a></li>
                     </ul>
                 </div>
                 {% comment %} <div class="col-sm-6">

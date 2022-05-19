@@ -30,7 +30,7 @@
                                 <span class="badge badge-default text-primary">Writer : {{ post.author|upper}}</span> ·
                                 <span class="badge badge-default text-dark">Created : {{ post.created_at }}</span>
                                 <div>
-                                    <span class="badge bg-light text-dark">카테고리  </span><h6 class="badge bg-success">{{post.category.name}}</h6>
+                                    <span class="badge bg-light text-dark">카테고리  </span><h6 class="badge bg-success">{{post.category}}</h6>
                                 </div>
                                 {% if post.post_file %}
                                     <div class="mt-2">

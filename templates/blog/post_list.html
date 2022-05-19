@@ -2,13 +2,14 @@
 
 {% block title %} List{% endblock title %}
 {% block content %}
+
         <!-- Page content-->
         <div class="container">
             <div class="row">
 
                 <!-- Blog entries-->
                 <div class="col-lg-8">
-                
+                    <h1 id='category_area'>Blog {% if category %} <span class="badge bg-light text-dark">{{ category }}</span>{% endif %}</h1>
                     <!-- Featured blog post-->
                     {% if post_list.exists %}
                     
