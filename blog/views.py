@@ -5,6 +5,7 @@ from .models import *
 
 class BlogView(ListView):
     model = Post
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['categories'] = Category.objects.all()
@@ -29,6 +30,13 @@ class BlogView(ListView):
 class PostDetail(DetailView):
     model = Post
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context        
+    
+    
 # Class View 사용하기 위한 주석 처리
 # def get_detail(request, pk, category_id=None):
 #     post = get_object_or_404(Post, pk=pk)

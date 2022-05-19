@@ -104,6 +104,7 @@ class TestView(TestCase):
         # self.assertIn('Blog', navbar.text)
         # self.assertIn('About', navbar.text)
         self.nav_test(soup)
+        self.category_card_test(soup)
 
         # 2-3 첫 번째 포스트의 제목이 웹프라우저 탭 타이틀에 들어있다.
         self.assertIn(self.post_001.title, soup.title.text)
@@ -112,6 +113,7 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         post_area = main_area.find('div', id='post-area')
         self.assertIn(self.post_001.title, post_area.text)
+        self.assertIn(self.category_programing.name, post_area.text)
 
         # 2-5 첫 번째 포스트의 작성자가 포스트 영역에 있다.
         self.assertIn(self.user_trump.username.upper(), post_area.text)
