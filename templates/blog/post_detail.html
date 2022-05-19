@@ -15,8 +15,8 @@
                     <article>
                         <!-- Preview image figure-->
                         <figure class="mb-4">
-                            {% if post.exists %}
-                                <img src="{{ post.post_image.url }}" alt="">
+                            {% if post.post_image %}
+                                <img class="card-img-top" src="{{ post.post_image.url }}" alt="">
                             {% else %}
                                 <img class="card-img-top" src="https://picsum.photos/seed/{{ post.pk }}/800/350" alt="..." />
                             {% endif %}
@@ -92,9 +92,6 @@
                 {% include 'side.html' %}
             </div>
         </div>
-    
-
-
     </div>
 {% endblock content %}
 

@@ -8,6 +8,8 @@ class TestView(TestCase):
     def setUp(self):
         self.client = Client()
         self.no_post = '작성된 게시물이 없습니다.'
+        self.post_001 = None
+        self.post_002 = None
         
     def test_post_list(self):
 
@@ -57,3 +59,33 @@ class TestView(TestCase):
         self.assertIn(post_002.title, main_area.text)
         
         self.assertNotIn(self.no_post, main_area.text)
+    
+    def test_post_detail(self):
+        # 1-1 포트슽가 하나 있다.
+        self.post_001 = Post.objects.create(title='첫 번째 포스트 입니다.',content='첫번째 내용 테스트 입니다.')
+        
+        # 1-2 포스트의 url은 /blog/1/ 이다.
+        self.assertEqual(self.post_001.get_absolute_url(), '/blog/1/')
+        
+        # 2-1 첫 번째 포스트의 상세 페이지 테스트
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # 2-2 첫 번째 포스트의 url로 접근하면 정상적으로 작동한다 (state_code : 200)
+        navbar = soup.nav
+        self.assertIn('Blog', navbar.text)
+        self.assertIn('About', navbar.text)
+
+        # 2-3 첫 번째 포스트의 제목이 웹프라우저 탭 타이틀에 들어있다.
+        self.assertIn(self.post_001.title, soup.title.text)
+
+        # 2-4 첫 번째 포스트의 제목이 포스트 영역에 있다.
+        main_area = soup.find('div', id='main-area')
+        post_area = main_area.find('div', id='post-area')
+        self.assertIn(self.post_001.title, post_area.text)
+
+        # 2-5 첫 번째 포스트의 작성자가 포스트 영역에 있다.
+        
+        # 2-6 첫 번째 포스트의 내용이 포스트 영역에 있다.
+        self.assertIn(self.post_001.content, post_area.text)

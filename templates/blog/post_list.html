@@ -15,7 +15,7 @@
 
                     <div class="card mb-4">
                         <a href="{% url 'blog:post' post.pk %}">
-                            {% if post.post_image.exists %}
+                            {% if post.post_image %}
                                 <img class="card-img-top" src="{{ post.post_image.url }}" alt="..." />
                             {% else %}
                                 <img class="card-img-top" src="https://picsum.photos/seed/{{ post.pk }}/800/350" alt="..." />
