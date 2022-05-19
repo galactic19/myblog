@@ -27,7 +27,7 @@
                         <section class="mb-5">
                             <h1>{{ post.title }}</h1>
                             <div>
-                                <span class="badge badge-default text-primary">Writer : {{ post.author}}</span> ·
+                                <span class="badge badge-default text-primary">Writer : {{ post.author|upper}}</span> ·
                                 <span class="badge badge-default text-dark">Created : {{ post.created_at }}</span>
 
                                 {% if post.post_file %}

@@ -30,3 +30,5 @@ class PostDetail(DetailView):
 #     context = {'post':post}
 #     return render(request, 'blog/detail.html', context)
 
+def about(request):
+    pass

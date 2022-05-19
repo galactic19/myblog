@@ -23,7 +23,7 @@
                             {% endif %}
                         </a>
                         <div class="card-body">
-                            <div class="small text-muted">{{ post.created_at }}  writer <span class="lead text-primary">{{ post.author.username }}</span></div>
+                            <div class="small text-muted">{{ post.created_at }}  writer <span class="lead text-primary">{{ post.author.username|upper }}</span></div>
                             <h2 class="card-title">
                                 <a href="{% url 'blog:post' pk=post.pk %}" class="text-decoration-none fw-bolder text-dark">
                                     {{ post.title }}

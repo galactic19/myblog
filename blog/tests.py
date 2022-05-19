@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
+from django.contrib.auth.models import User
 from .models import *
 # import requests
 
@@ -10,7 +11,28 @@ class TestView(TestCase):
         self.no_post = '작성된 게시물이 없습니다.'
         self.post_001 = None
         self.post_002 = None
+        # self.post_001 = Post.objects.create(title='첫번째 포스트 입니다', content='Hello World')
+        # self.post_002 = Post.objects.create(title='두번째 포스트 입니다', content='My Test page')
+        self.user_trump = User.objects.create(username='trump', password='password')
+        self.user_obama = User.objects.create(username='obama', password='password')
         
+    def nav_test(self, soup):
+        navber = soup.nav
+        self.assertIn('Blog', navber.text)
+        self.assertIn('About', navber.text)
+        
+        logo_btn = navber.find('a', text='Beom\'s')
+        self.assertEqual(logo_btn.attrs['href'], '/')
+        
+        home_btn = navber.find('a', text='Home')
+        self.assertEqual(home_btn.attrs['href'], '/')
+
+        blog_btn = navber.find('a', text='Blog')
+        self.assertEqual(blog_btn.attrs['href'], '/blog/')
+
+        about_btn = navber.find('a', text='About')
+        self.assertEqual(about_btn.attrs['href'], '/about/')
+
     def test_post_list(self):
 
         #requests 를 사용해, 게시물 번호로 게시물이 있는지 조회를 한다. 서버를 켜고 실행해야 한다.
@@ -29,11 +51,12 @@ class TestView(TestCase):
         self.assertEqual(soup.title.text, 'Blog List')
 
         # 1-3 네비게이션 바를 체크하여 변수에 대입.
-        navbar = soup.nav
+        # navbar = soup.nav
         
         # 1.4 Blog, About 라는 문구가 네비게이션 바에 있다.
-        self.assertIn('Blog', navbar.text, '26라인 메뉴에 메뉴가 없습니다')
-        self.assertIn('About', navbar.text, '27라인 메뉴에 메뉴가 없습니다')
+        # self.assertIn('Blog', navbar.text, '26라인 메뉴에 메뉴가 없습니다')
+        # self.assertIn('About', navbar.text, '27라인 메뉴에 메뉴가 없습니다')
+        self.nav_test(soup)
         
         
         # 2.1 포스트 게시물이 하나도 없다면
@@ -44,8 +67,8 @@ class TestView(TestCase):
         self.assertIn(self.no_post, main_area.text)
         
         # 3.1 포스트가 2개 있다면
-        post_001 = Post.objects.create(title='첫번째 포스트 입니다', content='Hello World')
-        post_002 = Post.objects.create(title='두번째 포스트 입니다', content='My Test page')
+        self.post_001 = Post.objects.create(title='첫번째 포스트 입니다', content='Hello World', author=self.user_trump)
+        self.post_002 = Post.objects.create(title='두번째 포스트 입니다', content='My Test page', author=self.user_obama)
         self.assertEqual(Post.objects.count(), 2)
         
         # 3.2 포스트 목록 페이지를 새로고침 했을 때
@@ -55,14 +78,17 @@ class TestView(TestCase):
         
         # 3.3 main_area에 포스트 2개의 제목이 존재한다.
         main_area = soup.find('div', id='main-area')
-        self.assertIn(post_001.title, main_area.text)
-        self.assertIn(post_002.title, main_area.text)
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertIn(self.post_002.title, main_area.text)
+        self.assertIn(self.user_trump.username.upper(), main_area.text) # 이것과 아래는 같다.
+        self.assertIn(self.post_002.author.username.upper(), main_area.text)
         
         self.assertNotIn(self.no_post, main_area.text)
     
+    
     def test_post_detail(self):
         # 1-1 포스트가 하나 있다.
-        self.post_001 = Post.objects.create(title='첫 번째 포스트 입니다.',content='첫번째 내용 테스트 입니다.')
+        self.post_001 = Post.objects.create(title='첫 번째 포스트 입니다.',content='첫번째 내용 테스트 입니다.', author=self.user_trump)
         
         # 1-2 포스트의 url은 /blog/1/ 이다.
         self.assertEqual(self.post_001.get_absolute_url(), '/blog/1/')
@@ -73,9 +99,10 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
 
         # 2-2 첫 번째 포스트의 url로 접근하면 정상적으로 작동한다 (state_code : 200)
-        navbar = soup.nav
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About', navbar.text)
+        # navbar = soup.nav
+        # self.assertIn('Blog', navbar.text)
+        # self.assertIn('About', navbar.text)
+        self.nav_test(soup)
 
         # 2-3 첫 번째 포스트의 제목이 웹프라우저 탭 타이틀에 들어있다.
         self.assertIn(self.post_001.title, soup.title.text)
@@ -86,6 +113,9 @@ class TestView(TestCase):
         self.assertIn(self.post_001.title, post_area.text)
 
         # 2-5 첫 번째 포스트의 작성자가 포스트 영역에 있다.
+        self.assertIn(self.user_trump.username.upper(), post_area.text)
         
         # 2-6 첫 번째 포스트의 내용이 포스트 영역에 있다.
         self.assertIn(self.post_001.content, post_area.text)
+
+        
