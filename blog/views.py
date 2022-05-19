@@ -1,13 +1,32 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.views.generic import ListView, DetailView
 from .models import *
 
-def index(request):
-    post = Post.objects.order_by('-created_at')
-    context = {'post_list': post}
-    return render(request, 'blog/list.html', context)
+
+class BlogView(ListView):
+    model = Post
 
 
-def get_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    context = {'post':post}
-    return render(request, 'blog/detail.html', {'post':post})
+# Class 형 View 를 만들기 위해 FBV 는 주석 처리
+# def index(request, category_slug=None):
+#     if category_slug:
+#         category = get_object_or_404(Category, slug=category_slug)
+#         # category = Category.objects.get(slug=category_slug)
+#         post = category.post_set.order_by('-created_at')
+#     else:
+#         category = Category.objects.all()
+#         post = Post.objects.all()
+
+#     context = {'post_list': post, 'category':category}
+#     return render(request, 'blog/list.html', context)
+
+
+class PostDetail(DetailView):
+    model = Post
+
+# Class View 사용하기 위한 주석 처리
+# def get_detail(request, pk, category_id=None):
+#     post = get_object_or_404(Post, pk=pk)
+#     context = {'post':post}
+#     return render(request, 'blog/detail.html', context)
+

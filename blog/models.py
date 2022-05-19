@@ -16,11 +16,10 @@ class Category(models.Model):
     
     def __str__(self):
         return self.name
-    
-    
+
     def get_absolute_url(self):
-        return ''
-    
+        # 임시로 설정
+        return self.name
 
 
 class Post(models.Model):
@@ -34,29 +33,24 @@ class Post(models.Model):
     # 작성자
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # 카테고리
-    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
-
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ['-created_at']
         verbose_name = '포스트'
         verbose_name_plural = '포스트'
 
-
     def __str__(self):
         return self.title + " " + self.hook_title
-    
-    
+
     def get_file_name(self):
         return os.path.basename(self.post_file.name)
-    
-    
+
     def get_file_size(self):
         file_path = "%s/%s" % (settings.MEDIA_ROOT, self.post_file.name)
         num_byte = os.path.getsize(file_path)
         result = num_byte/1024
         return int(result)
-    
-    
+
     def get_file_ext(self):
         return self.get_file_name().split('.')[-1]

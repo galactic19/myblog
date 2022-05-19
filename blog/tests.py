@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 from .models import *
+# import requests
 
 
 class TestView(TestCase):
@@ -9,6 +10,12 @@ class TestView(TestCase):
         self.no_post = '작성된 게시물이 없습니다.'
         
     def test_post_list(self):
+
+        #requests 를 사용해, 게시물 번호로 게시물이 있는지 조회를 한다. 서버를 켜고 실행해야 한다.
+        # url = 'http://127.0.0.1:8000/blog/post/3'
+        # res = requests.get(url)
+        # print(res.json())
+        
         # 1 포스트 목록 페이지를 가져 온다.
         post_list = self.client.get('/blog/')
         
@@ -19,12 +26,12 @@ class TestView(TestCase):
         soup = BeautifulSoup(post_list.content, 'html.parser')
         self.assertEqual(soup.title.text, '블로그 : 목록')
 
-        # 1-3 네비게이션 바가 있다.
+        # 1-3 네비게이션 바를 체크하여 변수에 대입.
         navbar = soup.nav
         
         # 1.4 Blog, About 라는 문구가 네비게이션 바에 있다.
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About', navbar.text)
+        self.assertIn('Blog', navbar.text, '26라인 메뉴에 메뉴가 없습니다')
+        self.assertIn('About', navbar.text, '27라인 메뉴에 메뉴가 없습니다')
         
         
         # 2.1 포스트 게시물이 하나도 없다면

@@ -71,6 +71,22 @@ from django.test import TestCase, Client
 from bs4 import BeautifulSoup
 from .models import *
 
+##### assertIn 함수의 설명
+###### assertIn()은 단위 테스트에서 문자열이 다른 문자열에 포함되어 있는지 여부를 확인하는 데 사용되는 단위 테스트
+
+인자 속성
+1. key : 주어진 컨테이너에서 존재를 확인하는 문자열
+2. container : 키 문자열이 검색되는 문자열
+3. message : 테스트 케이스가 실패했을 때 표시되는 메시지와 같은 문자열 문장.
+
+##### assetEqual 함수의 설명
+######assertEqual()은 단위 테스트에서 두 값의 동등성을 확인하는 데 사용되는 단위 테스트
+
+인자 속성
+1. 함수에 의한 비교에 사용되는 모든 유형의 firstValue  변수
+2. secondValue : 함수별 비교에 사용되는 모든 유형의 변수
+3. message : 테스트 케이스가 실패했을 때 표시되는 메시지와 같은 문자열 문장.
+
 
 class TestView(TestCase):
     def setUp(self):
@@ -121,6 +137,8 @@ class TestView(TestCase):
         self.assertNotIn(self.no_post, main_area.text)
 
 ```
+
+
 
 
 
