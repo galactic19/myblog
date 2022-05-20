@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:pk>/', PostDetail.as_view(), name="detail"),
     path('post/<int:pk>/', PostDetail.as_view(), name="post"), # detail
     path('category/<str:slug>/', category_page, name="category"),
+    path('tag/<str:slug>/', tag_page, name="tag"),
 ]
