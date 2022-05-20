@@ -41,7 +41,16 @@
                             <h5 class="text-muted"># {{ post.hook_title }}</h5>
                             {% endif %}
                             <p class="card-text lh-sm">{{ post.content|truncatechars:150}}</p>
-                            {% comment %} <p>{{ post }}</p> {% endcomment %}
+                            <p class="card-text">
+                                {% if post.tags.exists %}
+                                <i class="fa fa-tags text-primary"></i>
+                                    {% for tag in post.tags.iterator %}
+                                        <a href="{{tag.get_absolute_url}}" class="text-decoration-none">
+                                           &nbsp;<span class="badge bg-dark text-light">{{ tag }}</span>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
+                            </p>
                             <a class="btn btn-light" href="{% url 'blog:post' post.pk %}">더보기 →</a>
                         </div>
                     </div>

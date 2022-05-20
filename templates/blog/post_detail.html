@@ -45,6 +45,16 @@
                             </div>
                             <hr>
                             <p class="fs-5 mb-4 lead">{{ post.content|linebreaksbr }}</p>
+                            {% if post.tags.exists %}
+                                <i class="fa fa-tags text-primary"></i>
+                                {% for tag in post.tags.iterator %}
+                                    <a href="{{ tag.get_absolute_url }}" class="text-decoration-none h4">
+                                        <span class="badge bg-light text-dark lead">{{tag}}</span>
+                                    </a>
+                                {% endfor %}
+                            {% else %}
+                            {% endif %}
+                            <h1></h1>
                         </section>
                     </article>
                     </div>

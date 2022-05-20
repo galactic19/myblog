@@ -24,6 +24,18 @@ class Category(models.Model):
         # return f'/blog/category/{self.slug}/'
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50,)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return f'/blog/tag{self.slug}/'
+    
+
+
 class Post(models.Model):
     title = models.CharField(max_length=100)
     hook_title = models.CharField(max_length=50, blank=True)
@@ -36,6 +48,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # 카테고리
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
         ordering = ['-created_at']
