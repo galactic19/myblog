@@ -1,5 +1,6 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.views.generic import ListView, DetailView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import *
 
 
@@ -53,6 +54,23 @@ def tag_page(request, slug):
     context = {'tag':tag, 'post_list':post_list, 'categories':categories, 'no_category_post_count':no_category_post_count}
     return render(request, 'blog/post_list.html', context)
 
+
+
+class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Post
+    fields = ['title', 'hook_title', 'content', 'post_image', 'post_file', 'category']
+    
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.is_staff
+
+    def form_valid(self, form): # form inser 할 때 진입 되고 있음.
+        current_user = self.request.user
+        if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
+            form.instance.author = current_user
+            return super(PostCreate, self).form_valid(form)
+        else:
+            print('form_valid 엘스로  진입 했습니다.')
+            return redirect('blog:index')
 
 def about(request):
     pass

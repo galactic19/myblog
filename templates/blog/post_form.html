@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Create post{% endblock title %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col" id="main-area">
+                <h2>Create New Post</h2>
+                <hr>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <div class="text-center my-5">
+                        <button type="submit" class="btn btn-primary">작성완료</button>
+                        <a href="{% url 'blog:index' %}" class="btn btn-light text-dark">블로그 홈으로</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

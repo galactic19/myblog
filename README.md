@@ -81,6 +81,14 @@
 2. secondValue : 함수별 비교에 사용되는 모든 유형의 변수
 3. message : 테스트 케이스가 실패했을 때 표시되는 메시지와 같은 문자열 문장.
 
+
+- 테스트 코드에서 user 를 생성할때 .
+    self.user_obama = User.objects.create(username='obama', password='password')
+ 
+ 위 코드는 작동되지 않았다. 아래코드로 변경했더니 작동 되었다.
+    self.user_obama = User.objects.create_user(username='obama', password='password')
+
+
 아래 참고용 코드
 
 
@@ -139,8 +147,6 @@ class TestView(TestCase):
         self.assertNotIn(self.no_post, main_area.text)
 
 ```
-
-
 
 
 

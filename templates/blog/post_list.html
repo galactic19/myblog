@@ -9,9 +9,21 @@
 
                 <!-- Blog entries-->
                 <div class="col-lg-8">
-                    <h1 id='category_area' class="my-4">Blog 
-                        {% if category %} <span class="badge bg-light text-dark">{{ category }}</span>{% endif %}
-                        {% if tag %} <i class="fa fa-tags text-primary"></i><span class="badge bg-default text-dark"> tag:{{ tag }} ({{ tag.post_set.count }})</span>{% endif %}
+                    <h1 id='category_area' class="my-4">
+                        <div class="row">
+                            <div class="col-6">
+                                Blog
+                                {% if category %} <span class="badge bg-light text-dark">{{ category }}</span>{% endif %}
+                                {% if tag %} <i class="fa fa-tags text-primary"></i> <span class="badge bg-default text-dark"> tag:{{ tag }} ({{ tag.post_set.count }})</span>{% endif %}
+                            </div>
+                            <div class="col-6 text-end">
+                                {% if user.is_authenticated %}
+                                    {% if user.is_superuser or user.is_staff %}
+                                        <a href="{% url 'blog:create_post' %}" class="btn btn-dark">글쓰기</a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
                     </h1>
                     <!-- Featured blog post-->
                     {% if post_list.exists %}

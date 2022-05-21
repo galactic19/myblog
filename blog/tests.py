@@ -11,8 +11,10 @@ class TestView(TestCase):
     def setUp(self):
         self.client = Client()
         self.no_post = '작성된 게시물이 없습니다.'
-        self.user_trump = User.objects.create(username='trump', password='password')
-        self.user_obama = User.objects.create(username='obama', password='password')
+        self.user_trump = User.objects.create_user(username='trump', password='password')
+        self.user_obama = User.objects.create_user(username='obama', password='password')
+        self.user_obama.is_staff = True
+        self.user_obama.save()
 
         self.category_programing = Category.objects.create(name='프로그래밍', slug='프로그래밍')
         self.category_music = Category.objects.create(name='음악', slug='음악')
@@ -181,3 +183,37 @@ class TestView(TestCase):
         self.assertIn(self.post_001.title, main_area.text)
         self.assertNotIn(self.post_002.title, main_area.text)
         self.assertNotIn(self.post_003.title, main_area.text)
+
+
+    def test_create_post(self):
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
+
+        # 스텝이 아닌 트럼프가 로그인을 한다
+        self.client.login(username='trump', password='password')
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
+
+        # 스텝이 로그인 한다.
+        self.client.login(username='obama', password='password')
+        response = self.client.get('/blog/create_post/')
+        print(response, 'respone 는 무슨값이 들어갈까')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.assertEqual('Blog Create post', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Create New Post', main_area.text)
+        
+        self.client.post('/blog/create_post/',
+            {
+                'title':'Post Form 만들기',
+                'content' : 'Post Form 페이지 만들어보기',
+            }
+        )
+
+        self.assertEqual(Post.objects.count(), 4)
+        # last_post = Post.objects.last() # models.py 에 Meta 에 ordering 를 -created_at 로 지정해서 first 를 사용함.
+        last_post = Post.objects.first()
+        self.assertEqual(last_post.title, "Post Form 만들기")
+        self.assertEqual(last_post.author.username, "obama")
