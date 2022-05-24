@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
 
-{% block title %} Create post{% endblock title %}
+{% block title %}{{head_title}}{% endblock title %}
 
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col" id="main-area">
-                <h2>Create New Post</h2>
+                {% comment %} <h2>Create New Post</h2> {% endcomment %}
+                <h2>{{head_title}}</h2>
                 <hr>
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}

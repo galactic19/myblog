@@ -26,6 +26,7 @@
                         <!-- Post content-->
                         <section class="mb-5">
                             <h1>{{ post.title }}</h1>
+                            <h5>{{ post.hook_title }}</h5>
                             <div>
                                 <span class="badge badge-default text-primary">Writer : {{ post.author|upper}}</span> ·
                                 <span class="badge badge-default text-dark">Created : {{ post.created_at }}</span>
@@ -57,6 +58,13 @@
                             <h1></h1>
                         </section>
                     </article>
+                    </div>
+
+                    <div class="text-end py-3">
+                        {% if user.is_authenticated and user == post.author %}
+                            <a href="{% url 'blog:post_update' post.pk %}" class="btn btn-success me-3">글수정</a>
+                        {% endif %}
+                        <a href="{% url 'blog:index' %}" class="btn btn-outline-primary">목록</a>
                     </div>
 
 

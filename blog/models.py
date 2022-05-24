@@ -1,3 +1,4 @@
+from itertools import count
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -37,7 +38,7 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, db_index=True)
     hook_title = models.CharField(max_length=50, blank=True)
     content = models.TextField()
     post_image = models.ImageField(upload_to='postImg/%Y/%m/%d', blank=True)
@@ -47,8 +48,8 @@ class Post(models.Model):
     # 작성자
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     # 카테고리
-    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
-    tags = models.ManyToManyField(Tag, blank=True)
+    category = models.ForeignKey(Category, db_index=True, null=True, blank=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Tag, db_index=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
