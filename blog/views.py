@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.utils.text import slugify
 from .models import *
 
 
@@ -36,9 +37,27 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def form_valid(self, form): # form inser 할 때 진입 되고 있음.
         current_user = self.request.user
+        
         if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
-            return super(PostCreate, self).form_valid(form)
+            response = super().form_valid(form)
+            
+            tags_str = self.request.POST.get('tags_str')
+            if tags_str:
+                tags_str = tags_str.strip()
+                
+                tags_str = tags_str.replace(',', ';')
+                tags_str = tags_str.split(';')
+                
+                for t in tags_str:
+                    t = t.strip()
+                    tag, is_tag_created = Tag.objects.get_or_create(name=t)
+                    
+                    if is_tag_created:
+                        tag.slug = slugify(t, allow_unicode=True)
+                        tag.save()
+                    self.object.tags.add(tag)
+            return response
         else:
             return redirect('blog:index')
 

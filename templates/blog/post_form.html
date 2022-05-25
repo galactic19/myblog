@@ -14,6 +14,10 @@
                 <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{form.as_p}}
+                    <tr>
+                        <th>태그</th>
+                        <th><input type="text" name="tags_str" id="id_tags_str"></th>
+                    </tr>
                     <div class="text-center my-5">
                         <button type="submit" class="btn btn-primary">작성완료</button>
                         <a href="{% url 'blog:index' %}" class="btn btn-light text-dark">블로그 홈으로</a>
