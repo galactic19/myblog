@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+
 from .models import *
 
 
@@ -41,11 +42,11 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
             response = super().form_valid(form)
-            
+
             tags_str = self.request.POST.get('tags_str')
             if tags_str:
                 tags_str = tags_str.strip()
-                
+
                 tags_str = tags_str.replace(',', ';')
                 tags_str = tags_str.split(';')
                 
@@ -70,16 +71,45 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
         model = Post
-        fields = ['title','hook_title', 'content', 'post_image', 'post_file', 'category', 'tags']
+        fields = ['title','hook_title', 'content', 'post_image', 'post_file', 'category']
 
         def dispatch(self, request, *args, **kwargs):
             if request.user.is_authenticated and request.user == self.get_object().author:
                 return super().dispatch(request, *args, **kwargs)
             else:
                 raise PermissionDenied
+
+
+        def form_valid(self, form):
+            response = super().form_valid(form)
+            self.object.tags.clear()
             
+            tags_str = self.request.POST.get('tags_str')
+            if tags_str:
+                tags_str = tags_str.strip()
+                tags_str = tags_str.replace(',', ';')
+                tags_list = tags_str.split(';')
+                
+                for t in tags_list:
+                    t = t.strip()
+                    tag, is_tag_created = Tag.objects.get_or_create(name=t)
+                    
+                    if is_tag_created:
+                        tag.slug = slugify(t, allow_unicode=True)
+                        tag.save()
+                    self.object.tags.add(tag)
+            return response
+
+
         def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
+            context = super().get_context_data()
+            if self.object.tags.exists():
+                tags_str_list = []
+                
+                for i in self.object.tags.all():
+                    tags_str_list.append(i.name)
+                context['tags_str_default'] = '; '.join(tags_str_list) + ';'
+            
             context["head_title"] = ' Edit Post'
             return context
         

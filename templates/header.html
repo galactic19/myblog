@@ -1,4 +1,6 @@
 
+        {% load socialaccount %}
+
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
@@ -10,10 +12,24 @@
                         <li class="nav-item"><a class="nav-link" href="/about/">About</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'blog:index' %}">Blog</a></li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{{ '/accounts/logout/' }}">로그아웃</a></li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% provider_login_url 'google' %}">로그인</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
         </nav>
+        {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <span class="">{{ user.username }} 님 어서오세요</span>
+            </div>
+        </nav>
+        {% endif %}
+
+
         <!-- Page header with logo and tagline-->
         <header class="py-5 bg-dark border-bottom mb-4">
             <div class="container">
