@@ -1,8 +1,9 @@
+from enum import unique
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .models import *
 
@@ -34,12 +35,14 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     fields = ['title', 'hook_title', 'content', 'post_image', 'post_file', 'category']
     
     def test_func(self):
+        # return self.request.user.is_authenticated
         return self.request.user.is_superuser or self.request.user.is_staff
 
     def form_valid(self, form): # form inser 할 때 진입 되고 있음.
         current_user = self.request.user
         
         if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
+        # if current_user.is_authenticated: # 관리자 아닌 로그인 유저 모두가 글을 쓸수있게 하고 싶었음.
             form.instance.author = current_user
             response = super().form_valid(form)
 
@@ -60,7 +63,8 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                     self.object.tags.add(tag)
             return response
         else:
-            return redirect('blog:index')
+            return PermissionDenied
+            # return redirect('blog:index')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,7 +77,12 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
         model = Post
         fields = ['title','hook_title', 'content', 'post_image', 'post_file', 'category']
 
+
         def dispatch(self, request, *args, **kwargs):
+            '''
+                dispatch 메서드는 사용자가 get/post 방식으로 요청 했는지를 판단하는 메서드
+                CreateView, UpdateView 에서 사용한다.
+            '''
             if request.user.is_authenticated and request.user == self.get_object().author:
                 return super().dispatch(request, *args, **kwargs)
             else:
@@ -89,14 +98,16 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
                 tags_str = tags_str.strip()
                 tags_str = tags_str.replace(',', ';')
                 tags_list = tags_str.split(';')
-                
+                print(tags_list , 'tags_list 의 리스트 내역입니다.')
                 for t in tags_list:
                     t = t.strip()
+                    print(t, 't 의 값 내역입니다.')
                     tag, is_tag_created = Tag.objects.get_or_create(name=t)
                     
                     if is_tag_created:
                         tag.slug = slugify(t, allow_unicode=True)
                         tag.save()
+
                     self.object.tags.add(tag)
             return response
 
@@ -108,11 +119,17 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
                 
                 for i in self.object.tags.all():
                     tags_str_list.append(i.name)
-                context['tags_str_default'] = '; '.join(tags_str_list) + ';'
+                context['tags_str_default'] = '; '.join(tags_str_list)
             
             context["head_title"] = ' Edit Post'
             return context
-        
+
+
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = '/blog/'
+
 
 
 def category_page(request, slug):

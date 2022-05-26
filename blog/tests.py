@@ -31,6 +31,12 @@ class TestView(TestCase):
         self.post_003.tags.add(self.tag_python_kor)
         self.post_003.tags.add(self.tag_python)
         
+        self.comment_001 = Comment.objects.create(
+            post=self.post_001,
+            author=self.user_obama,
+            content='첫 번째 댓글입니다.'
+        )
+        
     
 
 
@@ -49,10 +55,10 @@ class TestView(TestCase):
         self.assertIn('About', navber.text)
         
         logo_btn = navber.find('a', text='Beom\'s')
-        self.assertEqual(logo_btn.attrs['href'], '/')
+        self.assertEqual(logo_btn.attrs['href'], '/blog/')
         
         home_btn = navber.find('a', text='Home')
-        self.assertEqual(home_btn.attrs['href'], '/')
+        self.assertEqual(home_btn.attrs['href'], '/blog/')
 
         blog_btn = navber.find('a', text='Blog')
         self.assertEqual(blog_btn.attrs['href'], '/blog/')
@@ -142,9 +148,6 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
 
         # 2-2 첫 번째 포스트의 url로 접근하면 정상적으로 작동한다 (state_code : 200)
-        # navbar = soup.nav
-        # self.assertIn('Blog', navbar.text)
-        # self.assertIn('About', navbar.text)
         self.nav_test(soup)
         self.category_card_test(soup)
 
@@ -166,6 +169,13 @@ class TestView(TestCase):
         self.assertIn(self.tag_hello.name, post_area.text)
         self.assertNotIn(self.tag_python.name, post_area.text)
         self.assertNotIn(self.tag_python_kor.name, post_area.text)
+        
+        # 코멘트
+        comments_area = soup.find('div', id='comment-area')
+        comment_001_area = comments_area.find('div', id='comment-1')
+        self.assertIn(self.comment_001.author.username, comment_001_area.text)
+        self.assertIn(self.comment_001.content, comment_001_area.text)
+        
 
 
     def test_category_page(self):

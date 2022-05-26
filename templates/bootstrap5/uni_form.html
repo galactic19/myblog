@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
 
 {% block title %}{{head_title}}{% endblock title %}
@@ -13,13 +12,12 @@
                 <h2>{{head_title}}</h2>
                 <hr>
                 <form action="" method="POST" enctype="multipart/form-data" class="uniForm">
-                    {{ form.as_ul | crispy }}
-                    <div id="div_id_tags_str">
-
-                        <label for="id_tags_str">Tags:</label>
-                        <input type="text" name="tags_str" id="id_tags_str" class="textinput form-control"  value="{{ tags_str_default }}">
-                    </div>
                     {% csrf_token %}
+                    {{ form.as_p }}
+                    <tr>
+                        <td>태그 : </td>
+                        <td><input type="text" name="tags_str" id="id_tags_str" class="textinput textInput form-control"  value="{{ tags_str_default }}"></td>
+                    </tr>
                     <div class="text-center my-5">
                         <button type="submit" class="btn btn-primary">작성완료</button>
                         <a href="{% url 'blog:index' %}" class="btn btn-light text-dark">블로그 홈으로</a>

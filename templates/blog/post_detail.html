@@ -61,8 +61,11 @@
                     </div>
 
                     <div class="text-end py-3">
+                        {% if user.is_authenticated and user == post.author or  user.is_superuser %}
+                            <a href="{% url 'blog:delete_post' post.pk %}" class="btn btn-danger me-3">글삭제</a>
+                        {% endif %}
                         {% if user.is_authenticated and user == post.author %}
-                            <a href="{% url 'blog:post_update' post.pk %}" class="btn btn-success me-3">글수정</a>
+                        <a href="{% url 'blog:post_update' post.pk %}" class="btn btn-success me-3">글수정</a>
                         {% endif %}
                         <a href="{% url 'blog:index' %}" class="btn btn-outline-primary">목록</a>
                     </div>
@@ -73,15 +76,20 @@
                     <section class="mb-5">
                         <div class="card bg-light" id="comment-area">
                             <div class="card-body">
+
                                 <!-- Comment form-->
-                                <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
+                                <form class="mb-4">
+                                    <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                </form>
+
                                 <!-- Comment with nested comments-->
-                                <div class="d-flex mb-4">
+                                {% comment %} <div class="d-flex mb-4">
                                     <!-- Parent comment-->
                                     <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
                                     <div class="ms-3">
                                         <div class="fw-bold">Commenter Name</div>
                                         If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
+
                                         <!-- Child comment 1-->
                                         <div class="d-flex mt-4">
                                             <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
@@ -90,6 +98,7 @@
                                                 And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
                                             </div>
                                         </div>
+                                        
                                         <!-- Child comment 2-->
                                         <div class="d-flex mt-4">
                                             <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
@@ -99,15 +108,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
+
+                                {% if post.comment_set.exists %}
+                                {% for comment in post.comment_set.iterator %}
                                 <!-- Single comment-->
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                <div class="d-flex" id="comment-{{ comment.pk }}">
+                                    <div class="flex-shrink-0">
+                                        <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+                                    </div>
                                     <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
+                                        <div class="fw-bold">{{ comment.author.username }} <span class="small ml-2 text-muted">{{ comment.created_at}}</span></div>
+                                        <p>{{ comment.content|linebreaks}}</p>
                                     </div>
                                 </div>
+                                {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
                     </section>
