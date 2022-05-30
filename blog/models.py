@@ -83,7 +83,7 @@ class Comment(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-modified_at', '-created_at']
     
     def __str__(self):
         return f'{self.author} :: {self.content}'

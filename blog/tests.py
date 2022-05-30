@@ -271,6 +271,12 @@ class TestView(TestCase):
         self.assertIn('Updated: ', comment_001_div.text)
         
         
+        
+        
+    def test_delete_comment(self):
+        commnet_by_trump = Comment.objects.create(post=self.post_001, author=self.user_trump, content='트럼프의 댓글 입니다')
+        
+        
 
     def test_category_page(self):
         response = self.client.get(self.category_programing.get_absolute_url())

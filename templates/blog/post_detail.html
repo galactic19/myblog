@@ -89,7 +89,7 @@
                                 </form>
                                 {% else %}
                                 <div class="row text-center py-3 mb-3">
-                                    <a class="btn btn-light" href="/accounts/login/">댓글을 달려면 로그인 후 가능합니다.</a>
+                                    <a class="btn btn-light" href="/accounts/login/"><i class="bi bi-chat-left-dots"></i> 댓글 작성은 로그인 후 가능합니다.</a>
                                 </div>
                                 {% endif %}
 
@@ -99,13 +99,13 @@
                                 {% for comment in post.comment_set.iterator %}
 
                                 <!-- 댓글 -->
-                                <div class="d-flex" id="comment-{{ comment.pk }}">
+                                <div class="d-flex border-bottom px-3 border-white mb-5" id="comment-{{ comment.pk }}">
                                     <div class="flex-shrink-0">
                                         <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
                                     </div>
                                     <div class="ms-3 row col">
                                         <div class="fw-bold">{{ comment.author.username }} 
-                                            <span class="small ml-2 text-muted">{{ comment.created_at}}</span>
+                                            <span class="small ml-2 fw-normal text-muted">{{ comment.created_at}}</span>
                                         </div>
 
                                         <p>{{ comment.content|linebreaks}}</p>
@@ -117,7 +117,10 @@
                                         {% endif %}
 
                                         {% if user.is_authenticated and comment.author == user %}
-                                            <a href="/blog/update_comment/{{ comment.pk }}/" id="comment-{{ comment.pk }}-update-btn"  class="btn btn-secondary">edit</a>
+                                            <div class="container">
+                                                <a href="/blog/update_comment/{{ comment.pk }}/" id="comment-{{ comment.pk }}-update-btn"  class="btn btn-secondary">edit</a>
+                                                <a href="/blog/delete_comment/{{ comment.pk }}/" id="comment-{{ comment.pk }}-delete-btn"  class="btn btn-secondary">delete</a>
+                                            </div>
                                         {% endif %}
                                     </div>
                                     
