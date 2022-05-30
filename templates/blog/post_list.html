@@ -49,11 +49,11 @@
                             </div>
                             <h2 class="card-title">
                                 <a href="{% url 'blog:post' pk=post.pk %}" class="text-decoration-none fw-bolder text-dark">
-                                    {{ post.title }}
+                                    {{ post.title }} {% if post.comment_set.exists %} <span class="lead"><em>(...{{ post.comment_set.count }})</em></span> {% endif %}
                                 </a>
                             </h2>
                             {% if post.hook_title %}
-                            <h5 class="text-muted"># {{ post.hook_title }}</h5>
+                            <h5 class="text-muted"># {{ post.hook_title }} </h5>
                             {% endif %}
                             <p class="card-text lh-sm">{{ post.content|truncatechars:150}}</p>
                             <p class="card-text">

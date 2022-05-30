@@ -11,7 +11,7 @@
     </div>
     <!-- Categories widget-->
     <div class="card mb-4" id="categories-card">
-        <div class="card-header"><b>Categories</b></div>
+        <div class="card-header lead"><b>카테고리</b></div>
         <div class="card-body">
             <div class="row">
                 <div class="col-sm-10">
@@ -23,15 +23,15 @@
                             <li><a href="{% url 'blog:category' None %}" class="text-decoration-none text-dark">미분류 ({{no_category_post_count}})</a></li>
                     </ul>
                 </div>
-                {% comment %} <div class="col-sm-6">
-
-                </div> {% endcomment %}
             </div>
         </div>
     </div>
     <!-- Side widget-->
     <div class="card mb-4">
-        <div class="card-header"><b>Side Widget</b></div>
-        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+        <div class="card-header h5"><b>사이드바 위젯</b></div>
+        <div class="card-body">
+            <p class="p-0 m-0">사이드바 위젯은</p> 
+            원하는 기능을 만들어 넣어보세요.
+        </div>
     </div>
 </div>

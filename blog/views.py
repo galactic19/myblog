@@ -1,9 +1,13 @@
 from enum import unique
+from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .forms import CommentForm, PostCreateForm
+
+import re
 
 from .models import *
 
@@ -16,7 +20,7 @@ class BlogView(ListView):
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = len(Post.objects.filter(category=None))
         context['category'] = '전체 게시물'
-        return context        
+        return context
 
 
 class PostDetail(DetailView):
@@ -27,12 +31,15 @@ class PostDetail(DetailView):
         context['categories'] = Category.objects.all()
         context['post_list'] = Post.objects.all()
         context['no_category_post_count'] = len(Post.objects.filter(category=None))
+        context['comment_form'] = CommentForm
         return context        
+
 
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['title', 'hook_title', 'content', 'post_image', 'post_file', 'category']
+    # fields = ['title', 'hook_title', 'content', 'post_image', 'post_file', 'category']
+    form_class = PostCreateForm
     
     def test_func(self):
         # return self.request.user.is_authenticated
@@ -49,12 +56,17 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             tags_str = self.request.POST.get('tags_str')
             if tags_str:
                 tags_str = tags_str.strip()
-
+                tags_str = tags_str.rstrip(';,')
+                tags_str = tags_str.lstrip(';,')
+                tags_str = tags_str.strip()
+                    
                 tags_str = tags_str.replace(',', ';')
                 tags_str = tags_str.split(';')
                 
                 for t in tags_str:
                     t = t.strip()
+                    t = re.sub(r'[-=+,#/\?:^.@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', t) # 정규식으로 문자열의 특수문자를 제거
+                    
                     tag, is_tag_created = Tag.objects.get_or_create(name=t)
                     
                     if is_tag_created:
@@ -66,17 +78,19 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             return PermissionDenied
             # return redirect('blog:index')
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["head_title"] = ' Create New Post'
+        context['create_form'] = PostCreateForm
         return context
     
 
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
         model = Post
-        fields = ['title','hook_title', 'content', 'post_image', 'post_file', 'category']
-
+        # fields = ['title','hook_title', 'content', 'post_image', 'post_file', 'category']
+        form_class = PostCreateForm
 
         def dispatch(self, request, *args, **kwargs):
             '''
@@ -90,18 +104,22 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 
 
         def form_valid(self, form):
+            # form = PostCreateForm(self.request.POST.get('pk'))
             response = super().form_valid(form)
             self.object.tags.clear()
             
             tags_str = self.request.POST.get('tags_str')
             if tags_str:
                 tags_str = tags_str.strip()
+                tags_str = tags_str.rstrip(';,')
+                tags_str = tags_str.lstrip(';,')
                 tags_str = tags_str.replace(',', ';')
                 tags_list = tags_str.split(';')
-                print(tags_list , 'tags_list 의 리스트 내역입니다.')
+
                 for t in tags_list:
                     t = t.strip()
-                    print(t, 't 의 값 내역입니다.')
+                    t = re.sub(r'[-=+,#/\?:^.@*\"※~ㆍ!』‘|\(\)\[\]`\'…》\”\“\’·]', '', t) # 정규식으로 문자열의 특수문자를 제거
+                    
                     tag, is_tag_created = Tag.objects.get_or_create(name=t)
                     
                     if is_tag_created:
@@ -110,6 +128,7 @@ class PostUpdate(LoginRequiredMixin, UpdateView):
 
                     self.object.tags.add(tag)
             return response
+
 
 
         def get_context_data(self, **kwargs):
@@ -155,3 +174,21 @@ def tag_page(request, slug):
     no_category_post_count = len(Post.objects.filter(category=None))
     context = {'tag':tag, 'post_list':post_list, 'categories':categories, 'no_category_post_count':no_category_post_count}
     return render(request, 'blog/post_list.html', context)
+
+
+def new_comment(request, pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
+
+        if request.method == "POST":
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                return redirect(comment.get_absolute_url())
+            else:
+                return redirect(post.get_absolute_url())
+        else:
+            raise PermissionDenied

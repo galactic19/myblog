@@ -77,10 +77,19 @@
                         <div class="card bg-light" id="comment-area">
                             <div class="card-body">
 
+                                {% if user.is_authenticated %}
                                 <!-- Comment form-->
-                                <form class="mb-4">
-                                    <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea>
+                                <form class="mb-4" id='comment-form' method="POST" action="{{ post.get_absolute_url }}new_comment/">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        {{ comment_form }}
+                                        {% comment %} <textarea class="form-control" rows="3" id='id_content' placeholder="Join the discussion and leave a comment!"></textarea> {% endcomment %}
+                                        <button class="btn btn-primary">댓글 달기</button>
+                                    </div>
                                 </form>
+                                {% else %}
+                                <a href="/accounts/login/">Log in and leave a comment</a>
+                                {% endif %}
 
                                 <!-- Comment with nested comments-->
                                 {% comment %} <div class="d-flex mb-4">
@@ -109,6 +118,8 @@
                                         </div>
                                     </div>
                                 </div> {% endcomment %}
+
+                                
 
                                 {% if post.comment_set.exists %}
                                 {% for comment in post.comment_set.iterator %}

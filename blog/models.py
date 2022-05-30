@@ -25,7 +25,7 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50,)
+    name = models.CharField(max_length=50, db_index=True,)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
 
     def __str__(self):
@@ -40,7 +40,6 @@ class Post(models.Model):
     title = models.CharField(max_length=100, db_index=True)
     hook_title = models.CharField(max_length=50, blank=True)
     content = models.TextField()
-    # content = MarkdownxField()
     post_image = models.ImageField(upload_to='postImg/%Y/%m/%d', blank=True)
     post_file = models.FileField(upload_to='postFile/%Y/%m/%d', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -58,6 +57,7 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title + " " + self.hook_title
+    
 
     def get_file_name(self):
         return os.path.basename(self.post_file.name)
