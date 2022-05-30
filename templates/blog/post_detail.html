@@ -88,50 +88,39 @@
                                     </div>
                                 </form>
                                 {% else %}
-                                <a href="/accounts/login/">Log in and leave a comment</a>
+                                <div class="row text-center py-3 mb-3">
+                                    <a class="btn btn-light" href="/accounts/login/">댓글을 달려면 로그인 후 가능합니다.</a>
+                                </div>
                                 {% endif %}
-
-                                <!-- Comment with nested comments-->
-                                {% comment %} <div class="d-flex mb-4">
-                                    <!-- Parent comment-->
-                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">Commenter Name</div>
-                                        If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-
-                                        <!-- Child comment 1-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Child comment 2-->
-                                        <div class="d-flex mt-4">
-                                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                                            <div class="ms-3">
-                                                <div class="fw-bold">Commenter Name</div>
-                                                When you put money directly to a problem, it makes a good headline.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> {% endcomment %}
 
                                 
 
                                 {% if post.comment_set.exists %}
                                 {% for comment in post.comment_set.iterator %}
-                                <!-- Single comment-->
+
+                                <!-- 댓글 -->
                                 <div class="d-flex" id="comment-{{ comment.pk }}">
                                     <div class="flex-shrink-0">
                                         <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
                                     </div>
-                                    <div class="ms-3">
-                                        <div class="fw-bold">{{ comment.author.username }} <span class="small ml-2 text-muted">{{ comment.created_at}}</span></div>
+                                    <div class="ms-3 row col">
+                                        <div class="fw-bold">{{ comment.author.username }} 
+                                            <span class="small ml-2 text-muted">{{ comment.created_at}}</span>
+                                        </div>
+
                                         <p>{{ comment.content|linebreaks}}</p>
+
+                                        {% if comment.created_at != comment.modified_at %}
+                                            <div class="row text-end">
+                                                <p class="col text-muted small text-end">Updated: {{ comment.modified_at}}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if user.is_authenticated and comment.author == user %}
+                                            <a href="/blog/update_comment/{{ comment.pk }}/" id="comment-{{ comment.pk }}-update-btn"  class="btn btn-secondary">edit</a>
+                                        {% endif %}
                                     </div>
+                                    
                                 </div>
                                 {% endfor %}
                                 {% endif %}

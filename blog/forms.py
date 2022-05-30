@@ -34,11 +34,11 @@ class PostCreateForm(forms.ModelForm):
         }
         
         labels = {
-             'title':'제목',
-             'hook_title' : '부제, 요약',
-             'content': '내용',
-             'post_image':'메인 이미지',
-             'post_file' : '첨부 파일',
-             'category': '카테고리 선택'
+            'title':'제목',
+            'hook_title' : '부제, 요약',
+            'content': '내용',
+            'post_image':'메인 이미지',
+            'post_file' : '첨부 파일',
+            'category': '카테고리 선택'
         }
         

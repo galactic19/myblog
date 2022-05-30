@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} - Edit Comment{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <form method="POST" id="comment-form">
+            {% csrf_token %}
+            <div class="input-group">
+                {{form}}
+                <input type="submit" class="btn btn-primary" value="댓글수정">
+            </div>
+            
+        </form>
+    </div>
+
+{% endblock content %}
