@@ -12,6 +12,7 @@ from .models import *
 
 class BlogView(ListView):
     model = Post
+    paginate_by = 1
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
