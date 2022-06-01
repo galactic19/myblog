@@ -74,6 +74,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("blog:detail", args=[self.pk])
     
+    
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -90,3 +91,11 @@ class Comment(models.Model):
     
     def get_absolute_url(self):
         return f'{self.post.get_absolute_url()}#comment-{self.pk}'
+    
+    #get_avatar_url
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists():
+            return self.author.socialaccount_set.first().get_avatar_url()
+        else:
+            return f"https://doitdjango.com/avatar/id/1042/a0b7a0e8545d602a/svg/{self.author.email}"
+            # https://doitdjango.com/avatar/id/1042/a0b7a0e8545d602a/svg/{self.author.email}

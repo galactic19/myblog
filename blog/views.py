@@ -3,33 +3,53 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.db.models import Q
 from .forms import CommentForm, PostCreateForm
+
 
 import re
 
 from .models import *
 
 
-class BlogView(ListView):
+# 카테고리 구성을 위해 만드는 클래스
+class CategoryList:
+    def category_list(self):
+        context = Category.objects.all()
+        return context
+    
+    def post_list_count(self):
+        context = Post.objects.all()
+        return context
+
+
+class BlogView(ListView, CategoryList):
     model = Post
-    paginate_by = 1
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['categories'] = Category.objects.all()
-        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        q_post_list = super().post_list_count()
+        context['all_count'] = q_post_list.count()
+        context['no_category_post_count'] = q_post_list.filter(category=None).count()
         context['category'] = '전체 게시물'
         return context
 
 
-class PostDetail(DetailView):
+class PostDetail(DetailView, CategoryList):
     model = Post
-
+    
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
+        context['req_id'] = self.request
         context['categories'] = Category.objects.all()
-        context['post_list'] = Post.objects.all()
-        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        
+        q_post_list = super().post_list_count()
+        context['post_list'] = q_post_list
+        context['all_count'] = q_post_list.count()
+        context['no_category_post_count'] = q_post_list.filter(category=None).count()
         context['comment_form'] = CommentForm
         return context
 
@@ -190,6 +210,28 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
 #         raise PermissionDenied
 
 
+
+    
+
+class PostSearch(ListView, CategoryList):
+    paginate_by = None
+    
+    def get_queryset(self):
+        q = self.kwargs['q']
+        post_list = Post.objects.filter(Q(title__contains=q)|Q(tags__name__contains=q)).distinct()
+        return post_list
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        q = self.kwargs['q']
+        context['categories'] = Category.objects.all()
+        q_post_list = super().post_list_count()
+        context['all_count'] = q_post_list.count()
+        context['no_category_post_count'] = q_post_list.filter(category=None).count()
+        context['search_info'] = f'검색어 : {q} ({self.get_queryset().count()})'
+        return context
+
+
 def category_page(request, slug):
     if slug == 'None':
         category = '미분류'
@@ -198,11 +240,11 @@ def category_page(request, slug):
         category = get_object_or_404(Category, slug=slug)
         post_list = Post.objects.filter(category=category)
 
-    post_list.count = Post.objects.count()
+    all_count = Post.objects.count()
     categories = Category.objects.all()
     no_category_post_count = Post.objects.filter(category=None).count()
     context = {'category': category, 'post_list': post_list, 'categories': categories,
-               'no_category_post_count': no_category_post_count}
+               'no_category_post_count': no_category_post_count, 'all_count':all_count}
     return render(request, 'blog/post_list.html', context)
 
 
@@ -233,3 +275,4 @@ def new_comment(request, pk):
                 return redirect(post.get_absolute_url())
         else:
             raise PermissionDenied
+
