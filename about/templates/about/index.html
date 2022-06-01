@@ -1,0 +1,56 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %} - About Me{% endblock title %}
+
+{% static 'css/index.css' %}
+
+
+{% block content %}
+
+    <section>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-lg-8">
+                    
+                    <br>
+                    <p class="lead">
+                        독서와 스포츠를 잘 하고 싶어 합니다.<br>
+                        쇼핑몰을 운영하면서 개발로도 많은 발전을 가져오기를 기원 합니다.
+                    </p>
+                    <ul>
+                        <li>WORK EXPERIENCE</li>
+                        <ul>
+
+                        </ul>
+                        <li>TECH</li>
+                        <ul>
+                            <li>Codeigniter</li>
+                            <li>Laravel</li>
+                            <li>Javascript, Jquery</li>
+                            <li>Python, Django</li>
+                            <li>React, Native</li>
+                            <li>HTML,Css</li>
+                            <li>Bootstrap4,5</li>
+                            <li>Node.js</li>
+                        </ul>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <img src="{% static 'images/developer-3461405_640.png' %}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1>PORTFOLIO</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
