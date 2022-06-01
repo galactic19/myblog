@@ -12,6 +12,18 @@
     <div class="container-fluid">
     <div class="row">
         {% include 'header.html' %}
+
+        <!-- Page header with logo and tagline-->
+        <header class="py-5 bg-dark border-bottom mb-4">
+            <div class="container">
+                <div class="text-center text-white my-5">
+                    <h1 class="fw-bolder">Beom's Blog</h1>
+                    <p class="lead mb-0">이 사이트는 python 과 bootstrap5로 제작 되었습니다.</p>
+                </div>
+            </div>
+        </header>
+
+        
         <div class="container" id="main-area">
             {% block content %}{% endblock content %}
         </div>

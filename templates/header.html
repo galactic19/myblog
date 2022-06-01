@@ -4,13 +4,13 @@
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="/blog/">Beom's</a>
+                <a class="navbar-brand" href="/">Beom's</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <div class="badge bg-light">
+                                <div class="badge bg-light rounded-pill">
                                     {% if user.socialaccount_set.all.0.get_avatar_url %}
                                         <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" alt="" class="rounded-circle" style="width:30px">
                                     {% else %}
@@ -20,31 +20,19 @@
                                 </div>
                             </li>
                         {% endif %}
-                            <li class="nav-item"><a class="nav-link" href="/blog/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="/about/">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
                             <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'blog:index' %}">Blog</a></li>
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="{{ '/accounts/logout/' }}">로그아웃</a></li>
+                            <li class="nav-item badge bg-warning"><a class="nav-link" href="{{ '/accounts/logout/' }}"><i class="bi bi-arrow-left-square"></i> 로그아웃</a></li>
                             {% if user.is_staff or user.is_superuser %}
-                                <li class="nav-item"><a class="nav-link" href="{{ '/admin/'}}" target="_blank">Admin</a></li>
+                                <li class="nav-item badge bg-primary"><a class="nav-link" href="{{ '/admin/'}}" target="_blank">Admin</a></li>
                             {% endif %}
                         {% else %}
-                        {% comment %} <li class="nav-item"><a class="nav-link" href="{% provider_login_url 'google' %}">로그인</a></li> {% endcomment %}
-                            <li class="nav-item"><a class="nav-link" href="{{ '/accounts/login/' }}">로그인</a></li>
+                                <li class="nav-item badge bg-warning"><a class="nav-link" href="{{ '/accounts/login/' }}"><i class="bi bi-key-fill"></i> 로그인</a></li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
         </nav>
-
-
-        <!-- Page header with logo and tagline-->
-        <header class="py-5 bg-dark border-bottom mb-4">
-            <div class="container">
-                <div class="text-center text-white my-5">
-                    <h1 class="fw-bolder">Beom's Blog</h1>
-                    <p class="lead mb-0">이 사이트는 python 과 bootstrap5로 제작 되었습니다.</p>
-                </div>
-            </div>
-        </header>

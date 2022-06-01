@@ -28,7 +28,7 @@ class BlogView(ListView, CategoryList):
     paginate_by = 3
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         q_post_list = super().post_list_count()
         context['all_count'] = q_post_list.count()
