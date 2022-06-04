@@ -1,0 +1,29 @@
+
+{% extends 'base.html' %}
+
+{% block title %} 출판된 도서{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-8">
+            {% for book in object_list %}
+                <div class="card mb-1">
+                    <div class="card-header">출판된 도서 </div>
+                    <div class="card-body">
+                        <h3>{{ book.title }}</h3>
+                        <p>저자 : {{ book.creator }} / 출판일 : {{ book.published_date }}</p>
+                        <h5><span class="text-primary">{{ book.price }}</span> 원</h5>
+                        <p>{{ book.description|linebreaks }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% include 'side.html' %}
+
+    </div>
+</div>
+
+{% endblock content %}

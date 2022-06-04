@@ -91,6 +91,8 @@ class Comment(models.Model):
     
     class Meta:
         ordering = ['-modified_at', '-created_at']
+        verbose_name = '코멘트'
+        verbose_name_plural = '코멘트'
     
     def __str__(self):
         return f'{self.author} :: {self.content}'
