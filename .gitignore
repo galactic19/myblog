@@ -66,7 +66,6 @@ db.sqlite3
 db.sqlite3-journal
 migrations/
 media/
-static
 static/
 
 # Flask stuff:
@@ -75,6 +74,8 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+.env.prod
+.env.prod.db
 
 # Sphinx documentation
 docs/_build/
