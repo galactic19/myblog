@@ -1,14 +1,12 @@
-# from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, permissions, generics, status
+from django.views.generic import ListView
+
+from rest_framework import viewsets, permissions, generics, status, mixins, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-# from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view
 from .models import Book
 from .serializers import BookSerializer
-from django.views.generic import ListView
-from rest_framework import generics
-from rest_framework import mixins
 
 
 
@@ -26,6 +24,7 @@ class BooksAPIMixins(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Ge
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
+    
 class BookAPIMixins(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -41,11 +40,26 @@ class BookAPIMixins(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
         return self.destroy(request, *args, **kwargs)
 
 
-
+'''
+    Class 형 View 를 generics 를 상속 받아 간결하게 작성.
+'''
+class BooksAPIGenerics(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    
+class BookAPIGenerics(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    lookup_field = 'bid'
+    
+    
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    
 
 class BookList(ListView):
     model = Book
-
 
 
 # @api_view(['GET', 'POST'])

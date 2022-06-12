@@ -5,11 +5,9 @@ from django.utils.text import slugify
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .forms import CommentForm, PostCreateForm
-
+from .models import *
 
 import re
-
-from .models import *
 
 
 # 카테고리 구성을 위해 만드는 클래스
@@ -17,7 +15,7 @@ class CategoryList:
     def category_list(self):
         context = Category.objects.all()
         return context
-    
+
     def post_list_count(self):
         context = Post.objects.all()
         return context
@@ -35,12 +33,11 @@ class BlogView(ListView, CategoryList):
         context['no_category_post_count'] = q_post_list.filter(category=None).count()
         context['category'] = '전체 게시물'
         return context
-
+    
 
 class PostDetail(DetailView, CategoryList):
     model = Post
-    
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['req_id'] = self.request
